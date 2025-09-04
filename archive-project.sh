@@ -3,6 +3,10 @@
 # Enhanced Project Archive Script with Title from cursor.md
 # This script reads the project title from cursor.md and uses it for consistent archiving
 # Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
+# Usage: ./archive-project.sh [ProjectTitle]
+# If ProjectTitle is not provided, it will be extracted from cursor.md or use directory name
+
+PROJECT_TITLE="$1"
 
 echo "=== Enhanced Project Archive Script ==="
 echo "Detecting environment and setting archive location..."
@@ -69,22 +73,27 @@ else
     echo "⚠ Warning: Environment not fully recognized"
 fi
 
-echo "Reading project title from cursor.md..."
-
-# Read cursor.md to extract project title
-if [[ ! -f "cursor.md" ]]; then
-    echo "ERROR: cursor.md not found! Cannot proceed without project title."
-    exit 1
-fi
-
-# Extract title from cursor.md (look for # Project Title)
-PROJECT_TITLE=$(grep -m 1 "^# " cursor.md | sed 's/^# *//' | tr -d '\r')
+# Determine project title from parameter, cursor.md, or directory name
 if [[ -z "$PROJECT_TITLE" ]]; then
-    # Fallback: use directory name
-    PROJECT_TITLE=$(basename "$PWD")
-    echo "No title found in cursor.md, using directory name: $PROJECT_TITLE"
+    echo "Reading project title from cursor.md..."
+    
+    # Read cursor.md to extract project title
+    if [[ ! -f "cursor.md" ]]; then
+        echo "ERROR: cursor.md not found! Cannot proceed without project title."
+        exit 1
+    fi
+
+    # Extract title from cursor.md (look for # Project Title)
+    PROJECT_TITLE=$(grep -m 1 "^# " cursor.md | sed 's/^# *//' | tr -d '\r')
+    if [[ -z "$PROJECT_TITLE" ]]; then
+        # Fallback: use directory name
+        PROJECT_TITLE=$(basename "$PWD")
+        echo "No title found in cursor.md, using directory name: $PROJECT_TITLE"
+    else
+        echo "Found project title: $PROJECT_TITLE"
+    fi
 else
-    echo "Found project title: $PROJECT_TITLE"
+    echo "Using provided project title: $PROJECT_TITLE"
 fi
 
 # Create consistent archive location using project title

@@ -1,6 +1,13 @@
 # Enhanced Project Archive Script with Title from cursor.md
 # This script reads the project title from cursor.md and uses it for consistent archiving
 # Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
+# Usage: .\archive-project.ps1 [ProjectTitle]
+# If ProjectTitle is not provided, it will be extracted from cursor.md or use directory name
+
+param(
+    [Parameter(Mandatory=$false)]
+    [string]$ProjectTitle
+)
 
 Write-Host "=== Enhanced Project Archive Script ===" -ForegroundColor Green
 Write-Host "Detecting environment and setting archive location..." -ForegroundColor Yellow
@@ -9,7 +16,7 @@ Write-Host "Detecting environment and setting archive location..." -ForegroundCo
 $ComputerName = $env:COMPUTERNAME
 $UserName = $env:USERNAME
 $OS = $env:OS
-$IsWSL = $env:WSL_DISTRO_NAME -ne $null
+$IsWSL = $null -ne $env:WSL_DISTRO_NAME
 
 Write-Host "Computer Name: $ComputerName" -ForegroundColor Cyan
 Write-Host "User Name: $UserName" -ForegroundColor Cyan
@@ -62,24 +69,29 @@ if ($Environment -eq "xps" -and $IsWSL) {
     Write-Host "⚠ Warning: Environment not fully recognized" -ForegroundColor Yellow
 }
 
-Write-Host "Reading project title from cursor.md..." -ForegroundColor Yellow
+# Determine project title from parameter, cursor.md, or directory name
+if (-not $ProjectTitle) {
+    Write-Host "Reading project title from cursor.md..." -ForegroundColor Yellow
+    
+    # Read cursor.md to extract project title
+    $CursorContent = Get-Content -Path "cursor.md" -Raw -ErrorAction SilentlyContinue
+    if (-not $CursorContent) {
+        Write-Host "ERROR: cursor.md not found! Cannot proceed without project title." -ForegroundColor Red
+        exit 1
+    }
 
-# Read cursor.md to extract project title
-$CursorContent = Get-Content -Path "cursor.md" -Raw -ErrorAction SilentlyContinue
-if (-not $CursorContent) {
-    Write-Host "ERROR: cursor.md not found! Cannot proceed without project title." -ForegroundColor Red
-    exit 1
-}
-
-# Extract title from cursor.md (look for # Project Archive Index or similar)
-$TitleMatch = [regex]::Match($CursorContent, '#\s*(.+?)(?:\r?\n|$)')
-if ($TitleMatch.Success) {
-    $ProjectTitle = $TitleMatch.Groups[1].Value.Trim()
-    Write-Host "Found project title: $ProjectTitle" -ForegroundColor Green
+    # Extract title from cursor.md (look for # Project Archive Index or similar)
+    $TitleMatch = [regex]::Match($CursorContent, '#\s*(.+?)(?:\r?\n|$)')
+    if ($TitleMatch.Success) {
+        $ProjectTitle = $TitleMatch.Groups[1].Value.Trim()
+        Write-Host "Found project title: $ProjectTitle" -ForegroundColor Green
+    } else {
+        # Fallback: use directory name
+        $ProjectTitle = Split-Path (Get-Location) -Leaf
+        Write-Host "No title found in cursor.md, using directory name: $ProjectTitle" -ForegroundColor Yellow
+    }
 } else {
-    # Fallback: use directory name
-    $ProjectTitle = Split-Path (Get-Location) -Leaf
-    Write-Host "No title found in cursor.md, using directory name: $ProjectTitle" -ForegroundColor Yellow
+    Write-Host "Using provided project title: $ProjectTitle" -ForegroundColor Green
 }
 
 # Create consistent archive location using project title
