@@ -4,6 +4,8 @@
 
 - Always assign a title and folder name by understanding the context of your push
 
+- Create artifacts from your output before archiving them.
+
 > This file serves as a generic template for project archives. It should remain unchanged unless you specifically ask for modifications.
 
 ## Project Overview
@@ -195,4 +197,54 @@ Available scripts automate the archival process:
 
 ---
 
-**Note**: This archive contains a comprehensive S3 on-premise storage implementation guide with OKRs, migration strategies, and automation tools for project archival.
+## 📊 Use Cases & Scenarios
+
+### Table: Cursor POC Helper Use Cases
+
+| **Use Case** | **Scenario** | **Workflow** | **Benefits** | **MCP Integration** |
+|--------------|--------------|--------------|--------------|-------------------|
+| **Rapid Prototyping** | Quick proof of concept development | Generate → Test → Archive → Clean | Fast iteration, organized history | Auto-title generation, project categorization |
+| **Learning Projects** | Educational coding experiments | Create → Learn → Document → Archive | Knowledge retention, reference library | Smart categorization by technology/topic |
+| **Client Demos** | Presentation-ready prototypes | Build → Demo → Archive → Present | Professional organization, easy retrieval | Client-specific archiving, demo preparation |
+| **Research & Analysis** | Data analysis, research projects | Analyze → Document → Archive → Reference | Research continuity, data preservation | Research metadata, analysis categorization |
+| **Tool Development** | Utility scripts, automation tools | Develop → Test → Archive → Deploy | Tool library, version management | Tool categorization, usage tracking |
+| **API Testing** | API integration, testing projects | Test → Document → Archive → Reference | API knowledge base, testing patterns | API-specific metadata, integration docs |
+| **UI/UX Prototypes** | Interface design, user experience | Design → Prototype → Archive → Iterate | Design history, user feedback tracking | Design categorization, feedback integration |
+| **Database Projects** | Data modeling, database design | Model → Implement → Archive → Maintain | Database knowledge, schema evolution | Schema documentation, migration tracking |
+| **Integration Projects** | System integration, API connections | Integrate → Test → Archive → Monitor | Integration patterns, troubleshooting | Integration metadata, error tracking |
+| **Performance Testing** | Load testing, optimization projects | Test → Analyze → Archive → Optimize | Performance baselines, optimization history | Performance metrics, optimization tracking |
+| **Security Audits** | Security testing, vulnerability assessment | Audit → Document → Archive → Remediate | Security knowledge, compliance tracking | Security categorization, vulnerability tracking |
+| **Documentation Projects** | Technical writing, knowledge base | Write → Review → Archive → Publish | Documentation library, knowledge management | Content categorization, review tracking |
+| **Automation Scripts** | Process automation, workflow optimization | Script → Test → Archive → Deploy | Automation library, process improvement | Script categorization, deployment tracking |
+| **Data Processing** | ETL, data transformation projects | Process → Validate → Archive → Monitor | Data pipeline knowledge, processing patterns | Data categorization, pipeline tracking |
+| **Mobile Development** | Mobile app prototypes, testing | Develop → Test → Archive → Deploy | Mobile development patterns, testing history | Platform categorization, deployment tracking |
+| **Cloud Projects** | Cloud infrastructure, deployment | Deploy → Monitor → Archive → Scale | Cloud knowledge, infrastructure patterns | Cloud categorization, deployment tracking |
+| **AI/ML Experiments** | Machine learning, AI model testing | Experiment → Evaluate → Archive → Improve | ML knowledge, model evolution | Model categorization, performance tracking |
+| **Blockchain Projects** | Smart contracts, DApp development | Develop → Test → Archive → Deploy | Blockchain knowledge, contract patterns | Blockchain categorization, deployment tracking |
+| **IoT Projects** | Internet of Things, sensor projects | Build → Test → Archive → Monitor | IoT patterns, sensor data analysis | IoT categorization, monitoring tracking |
+| **Game Development** | Game prototypes, mechanics testing | Prototype → Test → Archive → Iterate | Game design patterns, mechanics evolution | Game categorization, mechanics tracking |
+
+### **Workflow Patterns**
+
+| **Pattern** | **Description** | **MCP Enhancement** |
+|-------------|-----------------|-------------------|
+| **Generate & Archive** | Create → Test → Archive → Clean | Auto-categorization, smart titling |
+| **Iterative Development** | Build → Test → Archive → Refine → Archive | Version tracking, change documentation |
+| **Research & Development** | Research → Prototype → Archive → Document | Research metadata, knowledge extraction |
+| **Client Delivery** | Build → Demo → Archive → Deliver | Client-specific organization, delivery tracking |
+| **Learning & Practice** | Learn → Practice → Archive → Reference | Skill tracking, learning progression |
+
+### **MCP Integration Benefits**
+
+| **Feature** | **Current State** | **With MCP** | **Value Added** |
+|-------------|------------------|--------------|-----------------|
+| **Project Titling** | Manual input required | Auto-generated from context | Consistent, meaningful titles |
+| **Categorization** | Manual organization | Smart categorization | Better organization, easier retrieval |
+| **Metadata** | Basic file info | Rich project metadata | Enhanced search, better context |
+| **Workflow Automation** | Manual script execution | Automated workflow triggers | Seamless project lifecycle |
+| **Knowledge Extraction** | Manual documentation | Auto-generated insights | Better project understanding |
+| **Cross-Project Learning** | Manual pattern recognition | Automated pattern detection | Improved development practices |
+
+---
+
+**Note**: This archive contains a comprehensive Cursor POC Helper system with MCP integration, automation scripts, and use case documentation for efficient project management and archival.
