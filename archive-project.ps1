@@ -1,7 +1,64 @@
 # Enhanced Project Archive Script with Title from cursor.md
 # This script reads the project title from cursor.md and uses it for consistent archiving
+# Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
 
 Write-Host "=== Enhanced Project Archive Script ===" -ForegroundColor Green
+Write-Host "Detecting environment and setting archive location..." -ForegroundColor Yellow
+
+# Detect environment and set appropriate archive location
+$ComputerName = $env:COMPUTERNAME
+$UserName = $env:USERNAME
+$OS = $env:OS
+$IsWSL = $env:WSL_DISTRO_NAME -ne $null
+
+Write-Host "Computer Name: $ComputerName" -ForegroundColor Cyan
+Write-Host "User Name: $UserName" -ForegroundColor Cyan
+Write-Host "OS: $OS" -ForegroundColor Cyan
+Write-Host "WSL Environment: $IsWSL" -ForegroundColor Cyan
+
+# Determine environment and archive location
+if ($IsWSL -and $ComputerName -like "*XPS*" -or $ComputerName -like "*xps*") {
+    # Dell XPS running WSL2
+    $Environment = "xps"
+    $ArchiveBasePath = "/mnt/c/projects/secondbrain/$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected Dell XPS with WSL2 environment - using /mnt/c/projects/secondbrain" -ForegroundColor Green
+} elseif ($ComputerName -like "*3995wrx*" -or $ComputerName -like "*3995WRX*") {
+    # Workstation environment
+    $Environment = "workstation"
+    $ArchiveBasePath = "F:\secondbrain_v4\secondbrain\secondbrain\4_Archieve\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected 3995wrx workstation - using F: drive" -ForegroundColor Green
+} elseif ($OS -like "*Darwin*" -or $env:OSTYPE -like "*darwin*") {
+    # Mac environment
+    $Environment = "mac"
+    $ArchiveBasePath = "~/projects/secondbrain/$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected Mac environment - using ~/projects/secondbrain" -ForegroundColor Green
+} elseif ($ComputerName -like "*XPS*" -or $ComputerName -like "*xps*") {
+    # Dell XPS native Windows
+    $Environment = "xps"
+    $ArchiveBasePath = "C:\projects\secondbrain\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected Dell XPS native Windows - using C:\projects\secondbrain" -ForegroundColor Green
+} else {
+    # Fallback for unknown environments
+    $Environment = "unknown"
+    $ArchiveBasePath = "C:\projects\secondbrain\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Unknown environment - using default C:\projects\secondbrain" -ForegroundColor Yellow
+}
+
+# Location verification clause
+Write-Host "Environment detected: $Environment" -ForegroundColor Magenta
+if ($Environment -eq "xps" -and $IsWSL) {
+    Write-Host "✓ Confirmed: Running on Dell XPS in WSL2 environment" -ForegroundColor Green
+    Write-Host "✓ Destination: /mnt/c/projects/secondbrain" -ForegroundColor Green
+} elseif ($Environment -eq "workstation") {
+    Write-Host "✓ Confirmed: Running on workstation environment" -ForegroundColor Green
+    Write-Host "✓ Destination: F:\secondbrain_v4\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
+} elseif ($Environment -eq "mac") {
+    Write-Host "✓ Confirmed: Running on Mac environment" -ForegroundColor Green
+    Write-Host "✓ Destination: ~/projects/secondbrain" -ForegroundColor Green
+} else {
+    Write-Host "⚠ Warning: Environment not fully recognized" -ForegroundColor Yellow
+}
+
 Write-Host "Reading project title from cursor.md..." -ForegroundColor Yellow
 
 # Read cursor.md to extract project title
@@ -23,11 +80,11 @@ if ($TitleMatch.Success) {
 }
 
 # Create consistent archive location using project title
-$ArchiveBasePath = "F:\secondbrain_v4\secondbrain\secondbrain\4_Archieve\$(Get-Date -Format 'yyyy\/MM\/dd')\$ProjectTitle"
-$ArchivePath = $ArchiveBasePath
+$ArchivePath = Join-Path $ArchiveBasePath $ProjectTitle
 
 Write-Host "Starting archival process for: $ProjectTitle" -ForegroundColor Yellow
 Write-Host "Archive location: $ArchivePath" -ForegroundColor Cyan
+Write-Host "Workstation: $ComputerName" -ForegroundColor Cyan
 
 # Create archive directory if it doesn't exist
 if (!(Test-Path $ArchivePath)) {
@@ -56,9 +113,8 @@ foreach ($file in $SourceFiles) {
 }
 
 # Create enhanced archive summary file with project title
-$SummaryPath = Join-Path $ArchivePath "ARCHIVE_SUMMARY.md"
-
-$SummaryLines = @(
+$SummaryPath$SummaryLines = @(y file with project title
+$Sum$SummaryLines = @(
     "# Project Archive Summary: $ProjectTitle",
     "",
     "## Archive Information",
@@ -66,7 +122,12 @@ $SummaryLines = @(
     "- **Project Name**: $ProjectName",
     "- **Archive Date**: $CurrentDate",
     "- **Archive Location**: $ArchivePath",
+    "- **Environment**: $Environment",
+    "- **Computer Name**: $ComputerName",
+    "- **WSL Environment**: $IsWSL",
+    "- **Archive Base Path**: $ArchiveBasePath",
     "- **Total Files**: $($ArchivedFiles.Count)",
+    "- **Script Used**: Enhanced archive-project.ps1",iles.Count)",
     "- **Script Used**: Enhanced archive-project.ps1",
     "",
     "## Project Overview",
@@ -136,9 +197,11 @@ Write-Host "Created project README: README.md" -ForegroundColor Green
 
 # Display enhanced archive results
 Write-Host "=== Enhanced Archive Summary ===" -ForegroundColor Green
+Write-Host "Workstation: $ComputerName" -ForegroundColor Cyan
 Write-Host "Project Title: $ProjectTitle" -ForegroundColor Cyan
 Write-Host "Project Name: $ProjectName" -ForegroundColor Cyan
 Write-Host "Archive Location: $ArchivePath" -ForegroundColor Cyan
+Write-Host "Archive Base Path: $ArchiveBasePath" -ForegroundColor Cyan
 Write-Host "Files Archived: $($ArchivedFiles.Count)/$($SourceFiles.Count)" -ForegroundColor Cyan
 Write-Host "Archive Summary: ARCHIVE_SUMMARY.md" -ForegroundColor Cyan
 Write-Host "Project README: README.md" -ForegroundColor Cyan
