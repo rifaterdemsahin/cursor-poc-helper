@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Cleanup script to remove files except specified ones
-# Keep: archive-project.ps1, archive-project.sh, cleanup.ps1, cleanup.sh, cursor.md
+# Keep: archive.ps1, archive.sh, cleanup.ps1, cleanup.sh, cursor.md
 
 echo "Starting cleanup process..."
 
 # Define files to keep
 FILES_TO_KEEP=(
-    "archive-project.ps1"
-    "archive-project.sh"
+    "archive.ps1"
+    "archive.sh"
     "cleanup.ps1"
     "cleanup.sh"
     "cursor.md"

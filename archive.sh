@@ -4,8 +4,8 @@
 # MCP INTEGRATION: This script REQUIRES MCP to provide the folder name parameter
 # MCP MUST pass the ProjectTitle parameter - NO FALLBACK TO cursor.md OR DIRECTORY NAME
 # Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
-# Usage: ./archive-project.sh "Your Project Name"
-# MCP COMMAND EXAMPLE: run archive-project.sh "My Project Name"
+# Usage: ./archive.sh "Your Project Name"
+# MCP COMMAND EXAMPLE: run archive.sh "My Project Name"
 
 # MCP INTEGRATION: Validate that PROJECT_TITLE parameter is provided
 PROJECT_TITLE="$1"
@@ -14,7 +14,7 @@ PROJECT_TITLE="$1"
 if [[ -z "$PROJECT_TITLE" ]]; then
     echo "ERROR: MCP MUST provide the project folder name as the first parameter!"
     echo "Usage: $0 \"Your Project Name\""
-    echo "MCP COMMAND EXAMPLE: run archive-project.sh \"My Project Name\""
+    echo "MCP COMMAND EXAMPLE: run archive.sh \"My Project Name\""
     exit 1
 fi
 
@@ -103,8 +103,8 @@ CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Define files to exclude from archive (keep in workspace)
 EXCLUDE_FILES=(
-    "archive-project.ps1"
-    "archive-project.sh"
+    "archive.ps1"
+    "archive.sh"
     "cleanup.ps1"
     "cleanup.sh"
     "cursor.md"
