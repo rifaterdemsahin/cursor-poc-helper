@@ -17,11 +17,11 @@ Write-Host "OS: $OS" -ForegroundColor Cyan
 Write-Host "WSL Environment: $IsWSL" -ForegroundColor Cyan
 
 # Determine environment and archive location
-if ($IsWSL -and $ComputerName -like "*XPS*" -or $ComputerName -like "*xps*") {
+if ($IsWSL -and ($ComputerName -like "*XPS*" -or $ComputerName -like "*xps*" -or $ComputerName -like "*LaptopErdem*" -or $ComputerName -like "*laptoperdem*")) {
     # Dell XPS running WSL2
     $Environment = "xps"
-    $ArchiveBasePath = "/mnt/c/projects/secondbrain/$(Get-Date -Format 'yyyy\/MM\/dd')"
-    Write-Host "Detected Dell XPS with WSL2 environment - using /mnt/c/projects/secondbrain" -ForegroundColor Green
+    $ArchiveBasePath = "C:\projects\secondbrain\secondbrain\4_Archieve\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected Dell XPS with WSL2 environment - using C:\projects\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
 } elseif ($ComputerName -like "*3995wrx*" -or $ComputerName -like "*3995WRX*") {
     # Workstation environment
     $Environment = "workstation"
@@ -32,23 +32,26 @@ if ($IsWSL -and $ComputerName -like "*XPS*" -or $ComputerName -like "*xps*") {
     $Environment = "mac"
     $ArchiveBasePath = "~/projects/secondbrain/$(Get-Date -Format 'yyyy\/MM\/dd')"
     Write-Host "Detected Mac environment - using ~/projects/secondbrain" -ForegroundColor Green
-} elseif ($ComputerName -like "*XPS*" -or $ComputerName -like "*xps*") {
+} elseif ($ComputerName -like "*XPS*" -or $ComputerName -like "*xps*" -or $ComputerName -like "*LaptopErdem*" -or $ComputerName -like "*laptoperdem*") {
     # Dell XPS native Windows
     $Environment = "xps"
-    $ArchiveBasePath = "C:\projects\secondbrain\$(Get-Date -Format 'yyyy\/MM\/dd')"
-    Write-Host "Detected Dell XPS native Windows - using C:\projects\secondbrain" -ForegroundColor Green
+    $ArchiveBasePath = "C:\projects\secondbrain\secondbrain\4_Archieve\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Detected Dell XPS native Windows - using C:\projects\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
 } else {
     # Fallback for unknown environments
     $Environment = "unknown"
-    $ArchiveBasePath = "C:\projects\secondbrain\$(Get-Date -Format 'yyyy\/MM\/dd')"
-    Write-Host "Unknown environment - using default C:\projects\secondbrain" -ForegroundColor Yellow
+    $ArchiveBasePath = "C:\projects\secondbrain\secondbrain\4_Archieve\$(Get-Date -Format 'yyyy\/MM\/dd')"
+    Write-Host "Unknown environment - using default C:\projects\secondbrain\secondbrain\4_Archieve" -ForegroundColor Yellow
 }
 
 # Location verification clause
 Write-Host "Environment detected: $Environment" -ForegroundColor Magenta
 if ($Environment -eq "xps" -and $IsWSL) {
     Write-Host "✓ Confirmed: Running on Dell XPS in WSL2 environment" -ForegroundColor Green
-    Write-Host "✓ Destination: /mnt/c/projects/secondbrain" -ForegroundColor Green
+    Write-Host "✓ Destination: C:\projects\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
+} elseif ($Environment -eq "xps") {
+    Write-Host "✓ Confirmed: Running on Dell XPS native Windows environment" -ForegroundColor Green
+    Write-Host "✓ Destination: C:\projects\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
 } elseif ($Environment -eq "workstation") {
     Write-Host "✓ Confirmed: Running on workstation environment" -ForegroundColor Green
     Write-Host "✓ Destination: F:\secondbrain_v4\secondbrain\secondbrain\4_Archieve" -ForegroundColor Green
@@ -96,8 +99,8 @@ if (!(Test-Path $ArchivePath)) {
 $ProjectName = Split-Path (Get-Location) -Leaf
 $CurrentDate = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
-# Get all files in current directory, excluding the script and cursor.md
-$SourceFiles = Get-ChildItem -Path . -File | Where-Object { $_.Name -ne "archive-project.ps1" -and $_.Name -ne "cursor.md" } | ForEach-Object { $_.Name }
+# Get all files in current directory, excluding the script, cursor.md, cleanup.ps1, and report files
+$SourceFiles = Get-ChildItem -Path . -File | Where-Object { $_.Name -ne "archive-project.ps1" -and $_.Name -ne "cursor.md" -and $_.Name -ne "cleanup.ps1" -and $_.Name -ne "ARCHIVE_SCRIPT_DEVELOPMENT_REPORT.md" -and $_.Name -ne "PROJECT_COMPLETION_REPORT.md" } | ForEach-Object { $_.Name }
 
 Write-Host "Found $($SourceFiles.Count) files to archive" -ForegroundColor Cyan
 
@@ -113,8 +116,8 @@ foreach ($file in $SourceFiles) {
 }
 
 # Create enhanced archive summary file with project title
-$SummaryPath$SummaryLines = @(y file with project title
-$Sum$SummaryLines = @(
+$SummaryPath = Join-Path $ArchivePath "ARCHIVE_SUMMARY.md"
+$SummaryLines = @(
     "# Project Archive Summary: $ProjectTitle",
     "",
     "## Archive Information",
@@ -127,7 +130,6 @@ $Sum$SummaryLines = @(
     "- **WSL Environment**: $IsWSL",
     "- **Archive Base Path**: $ArchiveBasePath",
     "- **Total Files**: $($ArchivedFiles.Count)",
-    "- **Script Used**: Enhanced archive-project.ps1",iles.Count)",
     "- **Script Used**: Enhanced archive-project.ps1",
     "",
     "## Project Overview",
@@ -216,4 +218,43 @@ if ($ArchivedFiles.Count -eq $SourceFiles.Count) {
 }
 
 Write-Host "Enhanced archive process completed!" -ForegroundColor Green
+Write-Host "Project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
+
+# Create a related title file for this archive
+$TitleFileName = "title_$(Get-Date -Format 'yyyyMMdd_HHmmss').md"
+$TitleContent = @"
+# Archive Title: $ProjectTitle
+
+## Archive Information
+- **Project Title**: $ProjectTitle
+- **Archive Date**: $CurrentDate
+- **Archive Location**: $ArchivePath
+- **Environment**: $Environment
+- **Computer Name**: $ComputerName
+- **Files Archived**: $($ArchivedFiles.Count)
+
+## Related Archive
+This title file was created for the archive: **$ProjectTitle**
+Archived on: $CurrentDate
+Location: $ArchivePath
+
+---
+*Generated by archive-project.ps1*
+"@
+
+Set-Content -Path $TitleFileName -Value $TitleContent -Encoding UTF8
+Write-Host "Created related title file: $TitleFileName" -ForegroundColor Green
+
+# Execute cleanup script if it exists
+if (Test-Path "cleanup.ps1") {
+    Write-Host "Executing cleanup script..." -ForegroundColor Yellow
+    try {
+        & ".\cleanup.ps1"
+        Write-Host "Cleanup script executed successfully!" -ForegroundColor Green
+    } catch {
+        Write-Host "Error executing cleanup script: $($_.Exception.Message)" -ForegroundColor Red
+    }
+} else {
+    Write-Host "No cleanup script found (cleanup.ps1)" -ForegroundColor Yellow
+}ompleted!" -ForegroundColor Green
 Write-Host "Project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green

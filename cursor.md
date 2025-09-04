@@ -36,10 +36,7 @@ This archive contains a comprehensive web application designed to trigger N8N wo
   - Installation instructions
   - Feature overview
   - Technology stack
-  - Customization options
-  - Contributing guidelines
-
-### 4. **cursor.md** - This Archive Index
+  - Customization### 4. **cursor.md** - This Archive Index
 - **Type**: Archive Index
 - **Purpose**: Central reference for all project files
 - **Contents**: File descriptions and organization guide
@@ -47,7 +44,7 @@ This archive contains a comprehensive web application designed to trigger N8N wo
 ### 5. **title.md** - Title of the poc
 - used athe archieve folder name 
 - create with the inital document creation
-  
+
 ### 6. **Archive Scripts** - Automation Tools
 - **Type**: Various Script Types
 - **Purpose**: Automated project archival
@@ -57,15 +54,24 @@ This archive contains a comprehensive web application designed to trigger N8N wo
   - Generates archive summary
   - Provides detailed logging
 
-## 🚀 Quick Access
-
-| File | Purpose | Usage |
+### 7. **Development Report** - Archive Script Development Documentation
+- **Type**: Technical Development Report
+- **Purpose**: Comprehensive documentation of Linux archive script development
+- **Contents**:
+  - Development timeline and process
+  - Technical implementation details
+  - PowerShell to Bash translation methodology
+  - Performance comparisons and improvements
+  - Testing results and validation
+  - Future enhancement recommendationsrchive summary
+  - Provides| File | Purpose | Usage |
 |------|---------|-------|
 | n8n-cv-processor.html | Main web application | Open in browser to use |
 | Technical Docs | Technical details | Developer reference |
 | README.md | Project overview | User guide |
 | cursor.md | Archive index | File organization |
 | Archive Scripts | Archive automation | Run as needed |
+| Development Report | Script development docs | Technical reference |ve Scripts | Archive automation | Run as needed |
 
 ## 🔧 Technical Specifications
 
@@ -174,7 +180,7 @@ Available scripts automate the archival process:
 
 - **Project Name**: CV Question Processor - N8N Workflow
 - **Archive Date**: 2025-01-03
-- **Total Files**: 5
+- **Total Files**: 6
 - **Archive Type**: Web Application
 - **Deployment Status**: Ready for Use
 - **Documentation Status**: Complete
