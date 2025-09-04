@@ -256,5 +256,7 @@ if (Test-Path "cleanup.ps1") {
     }
 } else {
     Write-Host "No cleanup script found (cleanup.ps1)" -ForegroundColor Yellow
-}ompleted!" -ForegroundColor Green
+}
+
+Write-Host "Enhanced archive process completed!" -ForegroundColor Green
 Write-Host "Project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green

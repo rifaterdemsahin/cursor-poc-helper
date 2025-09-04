@@ -1,7 +1,9 @@
 # CV Question Processor - N8N Workflow
 
 > **⚠️ IMPORTANT: DO NOT UPDATE THIS FILE UNLESS EXPLICITLY REQUESTED** 
-> 
+
+- Always assign a title and folder name by understanding the context of your push
+
 > This file serves as a generic template for project archives. It should remain unchanged unless you specifically ask for modifications.
 
 ## Project Overview
