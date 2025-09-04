@@ -238,15 +238,27 @@ This file was created during the archive process to maintain project title consi
 EOF
     echo "Created related title file: $TITLE_FILE"
     
-    # Execute cleanup script
-    echo "Executing cleanup script..."
+    # Execute cleanup script after successful archiving
+    echo ""
+    echo "=== Post-Archive Cleanup ==="
     if [[ -f "cleanup.sh" ]]; then
-        bash cleanup.sh
+        echo "Executing cleanup script..."
+        if bash cleanup.sh; then
+            echo "Cleanup script executed successfully!"
+        else
+            echo "Warning: Cleanup script encountered errors, but continuing..."
+        fi
     else
-        echo "Cleanup script not found, skipping cleanup."
+        echo "No cleanup script found (cleanup.sh) - skipping cleanup"
     fi
     
-    echo "Enhanced archive process completed!"
+    echo ""
+    echo "=== Archive Process Completed ==="
+    echo "✓ Project '$PROJECT_TITLE' successfully archived"
+    echo "✓ Archive location: $ARCHIVE_PATH"
+    echo "✓ Cleanup process executed"
+    echo "✓ Workspace ready for next project"
+    echo ""
     echo "MCP-provided project title '$PROJECT_TITLE' ensures consistent organization."
 else
     echo "No files were archived. Check file permissions and paths."

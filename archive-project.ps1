@@ -238,18 +238,30 @@ Location: $ArchivePath
 Set-Content -Path $TitleFileName -Value $TitleContent -Encoding UTF8
 Write-Host "Created related title file: $TitleFileName" -ForegroundColor Green
 
-# Execute cleanup script if it exists
+# Execute cleanup script after successful archiving
+Write-Host "`n=== Post-Archive Cleanup ===" -ForegroundColor Magenta
 if (Test-Path "cleanup.ps1") {
     Write-Host "Executing cleanup script..." -ForegroundColor Yellow
     try {
-        & ".\cleanup.ps1"
+        # Execute cleanup script and capture output
+        $cleanupResult = & ".\cleanup.ps1" 2>&1
         Write-Host "Cleanup script executed successfully!" -ForegroundColor Green
+        
+        # Display cleanup results
+        Write-Host "`n=== Cleanup Results ===" -ForegroundColor Green
+        $cleanupResult | ForEach-Object { Write-Host $_ -ForegroundColor White }
+        
     } catch {
         Write-Host "Error executing cleanup script: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Continuing with archive completion..." -ForegroundColor Yellow
     }
 } else {
-    Write-Host "No cleanup script found (cleanup.ps1)" -ForegroundColor Yellow
+    Write-Host "No cleanup script found (cleanup.ps1) - skipping cleanup" -ForegroundColor Yellow
 }
 
-Write-Host "Enhanced archive process completed!" -ForegroundColor Green
-Write-Host "MCP-provided project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
+Write-Host "`n=== Archive Process Completed ===" -ForegroundColor Green
+Write-Host "✓ Project '$ProjectTitle' successfully archived" -ForegroundColor Green
+Write-Host "✓ Archive location: $ArchivePath" -ForegroundColor Green
+Write-Host "✓ Cleanup process executed" -ForegroundColor Green
+Write-Host "✓ Workspace ready for next project" -ForegroundColor Green
+Write-Host "`nMCP-provided project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Cyan
