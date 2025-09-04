@@ -1,4 +1,4 @@
-# CV Question Processor - N8N Workflow
+# [PROJECT TITLE] - Proof of Concept
 
 > **⚠️ IMPORTANT: DO NOT UPDATE THIS FILE UNLESS EXPLICITLY REQUESTED** 
 
@@ -7,19 +7,19 @@
 > This file serves as a generic template for project archives. It should remain unchanged unless you specifically ask for modifications.
 
 ## Project Overview
-This archive contains a comprehensive web application designed to trigger N8N workflows for processing recruiter questions and CV answers, along with comprehensive documentation.
+This archive contains a comprehensive proof of concept application with complete documentation and implementation details.
 
 ## 📁 Archive Contents
 
 ### 1. **Project Files** - Source Code & Assets
-- **Type**: HTML Web Application
-- **Purpose**: Single-page web app for CV question processing
+- **Type**: [APPLICATION TYPE] (e.g., Web Application, Desktop App, API, etc.)
+- **Purpose**: [APPLICATION PURPOSE] - Proof of concept implementation
 - **Features**: 
-  - N8N workflow integration
-  - CV content analysis
-  - Question-answer processing
-  - Multiple output formats
-  - Modern responsive UI
+  - [FEATURE 1] - Core functionality
+  - [FEATURE 2] - Additional capabilities
+  - [FEATURE 3] - Integration features
+  - [FEATURE 4] - Output/processing options
+  - [FEATURE 5] - User interface elements
 
 ### 2. **Technical Documentation** - Implementation Details
 - **Type**: Markdown Documentation
@@ -68,73 +68,73 @@ This archive contains a comprehensive web application designed to trigger N8N wo
   - Future enhancement recommendationsrchive summary
   - Provides| File | Purpose | Usage |
 |------|---------|-------|
-| n8n-cv-processor.html | Main web application | Open in browser to use |
+| [MAIN_APPLICATION_FILE] | Main application file | [USAGE_INSTRUCTIONS] |
 | Technical Docs | Technical details | Developer reference |
 | README.md | Project overview | User guide |
 | cursor.md | Archive index | File organization |
 | Archive Scripts | Archive automation | Run as needed |
-| Development Report | Script development docs | Technical reference |ve Scripts | Archive automation | Run as needed |
+| Development Report | Script development docs | Technical reference |
 
 ## 🔧 Technical Specifications
 
 ### Project Features
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: N8N Workflow Engine
-- **Deployment**: Single HTML file, browser-based
-- **Responsiveness**: Mobile-first responsive design
-- **Security**: API key authentication support
+- **Frontend**: [FRONTEND_TECHNOLOGIES] (e.g., HTML5, CSS3, JavaScript, React, Vue, etc.)
+- **Backend**: [BACKEND_TECHNOLOGIES] (e.g., Node.js, Python, Java, .NET, etc.)
+- **Deployment**: [DEPLOYMENT_METHOD] (e.g., Single file, Docker, Cloud, etc.)
+- **Architecture**: [ARCHITECTURE_PATTERN] (e.g., Single-page, Microservices, etc.)
+- **Security**: [SECURITY_FEATURES] (e.g., Authentication, Authorization, etc.)
 
 ## 📋 Usage Instructions
 
 ### For End Users
-1. Open n8n-cv-processor.html in any modern browser
-2. Configure N8N webhook URL
-3. Enter recruiter questions and CV content
-4. Select processing type and output format
-5. Click "Process with N8N" to trigger workflow
+1. [STEP 1] - [INITIAL_SETUP_INSTRUCTION]
+2. [STEP 2] - [CONFIGURATION_INSTRUCTION]
+3. [STEP 3] - [DATA_INPUT_INSTRUCTION]
+4. [STEP 4] - [PROCESSING_INSTRUCTION]
+5. [STEP 5] - [EXECUTION_INSTRUCTION]
 
 ### For Developers
 1. Review technical documentation
-2. Modify HTML/CSS/JavaScript as needed
+2. Modify [TECHNOLOGY_STACK] as needed
 3. Test locally before deployment
-4. Deploy to web server or use locally
+4. Deploy to [DEPLOYMENT_TARGET] or use locally
 
 ## 🎯 Project Goals
 
 ### Primary Objectives
-- ✅ N8N workflow integration
-- ✅ CV content processing
-- ✅ Question-answer analysis
-- ✅ Modern responsive UI
-- ✅ Comprehensive documentation
+- ✅ [OBJECTIVE_1] - Core functionality implementation
+- ✅ [OBJECTIVE_2] - Data processing capabilities
+- ✅ [OBJECTIVE_3] - Analysis and processing features
+- ✅ [OBJECTIVE_4] - User interface design
+- ✅ [OBJECTIVE_5] - Comprehensive documentation
 
 ## 🔄 Version History
 
 ### Current Version
-- **Release Date**: 2025-01-03
-- **Features**: N8N integration, CV processing, responsive UI
+- **Release Date**: [RELEASE_DATE]
+- **Features**: [KEY_FEATURES] - Core functionality and capabilities
 - **Documentation**: Complete
-- **Deployment**: Single HTML file
+- **Deployment**: [DEPLOYMENT_TYPE]
 - **Status**: Ready for Use
 
 ## 📚 Related Resources
 
 ### Documentation
-- N8N workflow documentation
-- Webhook integration guides
-- CV processing best practices
-- HTML5/CSS3/JavaScript references
+- [TECHNOLOGY_1] documentation
+- [INTEGRATION_TYPE] integration guides
+- [DOMAIN_SPECIFIC] best practices
+- [TECHNOLOGY_STACK] references
 
 ### Tools & Services
-- N8N workflow automation platform
-- Modern web browsers
-- Web development tools
-- Code editors
+- [PRIMARY_PLATFORM] platform
+- [RUNTIME_ENVIRONMENT] environment
+- [DEVELOPMENT_TOOLS] tools
+- [EDITOR_IDE] editors
 
 ## 🗂️ Archive Organization
 
 This archive follows a logical structure:
-1. **Source Code** - Working web application
+1. **Source Code** - Working application
 2. **Technical Docs** - Implementation details
 3. **User Guide** - Usage instructions
 4. **Archive Index** - This file
@@ -153,12 +153,12 @@ Available scripts automate the archival process:
 ## 🔍 Search & Navigation
 
 ### By File Type
-- **Source Files**: HTML, CSS, JavaScript
+- **Source Files**: [SOURCE_FILE_TYPES] (e.g., HTML, CSS, JavaScript, Python, Java, etc.)
 - **Documentation**: Markdown and other docs
 - **Index**: cursor.md
 
 ### By Purpose
-- **Run Application**: n8n-cv-processor.html
+- **Run Application**: [MAIN_APPLICATION_FILE]
 - **Learn Technical Details**: Technical documentation
 - **Get Started**: README.md
 - **Navigate Archive**: cursor.md
@@ -180,10 +180,10 @@ Available scripts automate the archival process:
 
 ## 📝 Archive Metadata
 
-- **Project Name**: CV Question Processor - N8N Workflow
-- **Archive Date**: 2025-01-03
-- **Total Files**: 6
-- **Archive Type**: Web Application
+- **Project Name**: [PROJECT_TITLE] - Proof of Concept
+- **Archive Date**: [ARCHIVE_DATE]
+- **Total Files**: [FILE_COUNT]
+- **Archive Type**: [APPLICATION_TYPE]
 - **Deployment Status**: Ready for Use
 - **Documentation Status**: Complete
 - **Archive Automation**: Active
@@ -191,8 +191,8 @@ Available scripts automate the archival process:
 
 ---
 
-*This archive serves as a complete reference for the CV Question Processor project, providing all necessary files for development, deployment, and maintenance.*
+*This archive serves as a complete reference for the [PROJECT_TITLE] project, providing all necessary files for development, deployment, and maintenance.*
 
 ---
 
-**Note**: This archive contains a single-page web application for processing CV questions using N8N workflows, with comprehensive documentation and automation tools.
+**Note**: This archive contains a proof of concept application with comprehensive documentation and automation tools for project archival.
