@@ -9,7 +9,9 @@ $allFiles = Get-ChildItem -File
 # Define files to keep
 $filesToKeep = @(
     "archive-project.ps1",
-    "cleanup.ps1", 
+    "archive-project.sh",
+    "cleanup.ps1",
+    "cleanup.sh",
     "cursor.md"
 )
 

@@ -1,46 +1,56 @@
 #!/bin/bash
 
 # Cleanup script to remove files except specified ones
-# Keep: archive-project.sh, cleanup.sh, cursor.md
+# Keep: archive-project.ps1, archive-project.sh, cleanup.ps1, cleanup.sh, cursor.md
 
 echo "Starting cleanup process..."
 
-# Get all files in the current directory
-all_files=($(find . -maxdepth 1 -type f -printf "%f\n" 2>/dev/null || find . -maxdepth 1 -type f -exec basename {} \;))
-
 # Define files to keep
-files_to_keep=(
+FILES_TO_KEEP=(
+    "archive-project.ps1"
     "archive-project.sh"
+    "cleanup.ps1"
     "cleanup.sh"
     "cursor.md"
 )
 
 # Counter for removed files
-removed_count=0
+REMOVED_COUNT=0
 
-for file in "${all_files[@]}"; do
-    if [[ ! " ${files_to_keep[@]} " =~ " ${file} " ]]; then
-        if rm -f "$file" 2>/dev/null; then
+# Get all files in the current directory
+for file in *; do
+    if [[ -f "$file" ]]; then
+        # Check if file should be kept
+        KEEP_FILE=false
+        for keep in "${FILES_TO_KEEP[@]}"; do
+            if [[ "$file" == "$keep" ]]; then
+                KEEP_FILE=true
+                break
+            fi
+        done
+        
+        if [[ "$KEEP_FILE" == false ]]; then
+            rm -f "$file"
             echo "Removed: $file"
-            ((removed_count++))
+            ((REMOVED_COUNT++))
         else
-            echo "Error removing $file"
+            echo "Keeping: $file"
         fi
-    else
-        echo "Keeping: $file"
     fi
 done
 
 echo ""
 echo "Cleanup completed!"
-echo "Files removed: $removed_count"
-echo "Files remaining: ${#files_to_keep[@]}"
+echo "Files removed: $REMOVED_COUNT"
+echo "Files remaining: ${#FILES_TO_KEEP[@]}"
 
 # Show remaining files
 echo ""
 echo "Remaining files:"
-for file in "${files_to_keep[@]}"; do
+for file in *; do
     if [[ -f "$file" ]]; then
         echo "  - $file"
     fi
 done
+
+echo "Cleanup script executed successfully!"

@@ -99,8 +99,8 @@ if (!(Test-Path $ArchivePath)) {
 $ProjectName = Split-Path (Get-Location) -Leaf
 $CurrentDate = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
-# Get all files in current directory, excluding the script, cursor.md, cleanup.ps1, and report files
-$SourceFiles = Get-ChildItem -Path . -File | Where-Object { $_.Name -ne "archive-project.ps1" -and $_.Name -ne "cursor.md" -and $_.Name -ne "cleanup.ps1" -and $_.Name -ne "ARCHIVE_SCRIPT_DEVELOPMENT_REPORT.md" -and $_.Name -ne "PROJECT_COMPLETION_REPORT.md" } | ForEach-Object { $_.Name }
+# Get all files in current directory, excluding the script, cursor.md, cleanup.ps1, .sh files, and report files
+$SourceFiles = Get-ChildItem -Path . -File | Where-Object { $_.Name -ne "archive-project.ps1" -and $_.Name -ne "archive-project.sh" -and $_.Name -ne "cursor.md" -and $_.Name -ne "cleanup.ps1" -and $_.Name -ne "cleanup.sh" -and $_.Name -ne "ARCHIVE_SCRIPT_DEVELOPMENT_REPORT.md" -and $_.Name -ne "PROJECT_COMPLETION_REPORT.md" } | ForEach-Object { $_.Name }
 
 Write-Host "Found $($SourceFiles.Count) files to archive" -ForegroundColor Cyan
 

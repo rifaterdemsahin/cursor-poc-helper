@@ -1,45 +1,45 @@
 #!/bin/bash
 
-# Enhanced Project Archive Script for WSL/Linux Environment
+# Enhanced Project Archive Script with Title from cursor.md
 # This script reads the project title from cursor.md and uses it for consistent archiving
-# Automatically detects environment and uses appropriate archive location
+# Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
 
-echo "=== Enhanced Project Archive Script (WSL/Linux) ==="
+echo "=== Enhanced Project Archive Script ==="
 echo "Detecting environment and setting archive location..."
 
 # Detect environment and set appropriate archive location
 COMPUTER_NAME=$(hostname)
 USER_NAME=$(whoami)
-OS_TYPE=$(uname -s)
+OS=$(uname -s)
 IS_WSL=false
 
 # Check if running in WSL
-if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSLENV" ]] || grep -q Microsoft /proc/version 2>/dev/null; then
+if [[ -n "$WSL_DISTRO_NAME" ]]; then
     IS_WSL=true
 fi
 
 echo "Computer Name: $COMPUTER_NAME"
 echo "User Name: $USER_NAME"
-echo "OS Type: $OS_TYPE"
+echo "OS: $OS"
 echo "WSL Environment: $IS_WSL"
 
 # Determine environment and archive location
-if [[ "$IS_WSL" == true ]] && [[ "$COMPUTER_NAME" == *"XPS"* ]] || [[ "$COMPUTER_NAME" == *"xps"* ]] || [[ "$COMPUTER_NAME" == *"LaptopErdem"* ]] || [[ "$COMPUTER_NAME" == *"laptoperdem"* ]]; then
+if [[ "$IS_WSL" == true && ("$COMPUTER_NAME" == *"XPS"* || "$COMPUTER_NAME" == *"xps"* || "$COMPUTER_NAME" == *"LaptopErdem"* || "$COMPUTER_NAME" == *"laptoperdem"*) ]]; then
     # Dell XPS running WSL2
     ENVIRONMENT="xps"
     ARCHIVE_BASE_PATH="/mnt/c/projects/secondbrain/secondbrain/4_Archieve/$(date +%Y/%m/%d)"
     echo "Detected Dell XPS with WSL2 environment - using /mnt/c/projects/secondbrain/secondbrain/4_Archieve"
-elif [[ "$COMPUTER_NAME" == *"3995wrx"* ]] || [[ "$COMPUTER_NAME" == *"3995WRX"* ]]; then
+elif [[ "$COMPUTER_NAME" == *"3995wrx"* || "$COMPUTER_NAME" == *"3995WRX"* ]]; then
     # Workstation environment
     ENVIRONMENT="workstation"
     ARCHIVE_BASE_PATH="/mnt/f/secondbrain_v4/secondbrain/secondbrain/4_Archieve/$(date +%Y/%m/%d)"
     echo "Detected 3995wrx workstation - using /mnt/f drive"
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
+elif [[ "$OS" == "Darwin" ]]; then
     # Mac environment
     ENVIRONMENT="mac"
     ARCHIVE_BASE_PATH="$HOME/projects/secondbrain/$(date +%Y/%m/%d)"
     echo "Detected Mac environment - using ~/projects/secondbrain"
-elif [[ "$COMPUTER_NAME" == *"XPS"* ]] || [[ "$COMPUTER_NAME" == *"xps"* ]] || [[ "$COMPUTER_NAME" == *"LaptopErdem"* ]] || [[ "$COMPUTER_NAME" == *"laptoperdem"* ]]; then
+elif [[ "$COMPUTER_NAME" == *"XPS"* || "$COMPUTER_NAME" == *"xps"* || "$COMPUTER_NAME" == *"LaptopErdem"* || "$COMPUTER_NAME" == *"laptoperdem"* ]]; then
     # Dell XPS native Linux
     ENVIRONMENT="xps"
     ARCHIVE_BASE_PATH="/mnt/c/projects/secondbrain/secondbrain/4_Archieve/$(date +%Y/%m/%d)"
@@ -53,7 +53,7 @@ fi
 
 # Location verification
 echo "Environment detected: $ENVIRONMENT"
-if [[ "$ENVIRONMENT" == "xps" ]] && [[ "$IS_WSL" == true ]]; then
+if [[ "$ENVIRONMENT" == "xps" && "$IS_WSL" == true ]]; then
     echo "✓ Confirmed: Running on Dell XPS in WSL2 environment"
     echo "✓ Destination: /mnt/c/projects/secondbrain/secondbrain/4_Archieve"
 elif [[ "$ENVIRONMENT" == "xps" ]]; then
@@ -77,11 +77,11 @@ if [[ ! -f "cursor.md" ]]; then
     exit 1
 fi
 
-# Extract title from cursor.md (look for # Project Title or similar)
-PROJECT_TITLE=$(grep -m 1 "^# " cursor.md | sed 's/^# *//' | tr -d '\r\n')
+# Extract title from cursor.md (look for # Project Title)
+PROJECT_TITLE=$(grep -m 1 "^# " cursor.md | sed 's/^# *//' | tr -d '\r')
 if [[ -z "$PROJECT_TITLE" ]]; then
     # Fallback: use directory name
-    PROJECT_TITLE=$(basename "$(pwd)")
+    PROJECT_TITLE=$(basename "$PWD")
     echo "No title found in cursor.md, using directory name: $PROJECT_TITLE"
 else
     echo "Found project title: $PROJECT_TITLE"
@@ -98,165 +98,157 @@ echo "Workstation: $COMPUTER_NAME"
 mkdir -p "$ARCHIVE_PATH"
 
 # Get current directory name for project identification
-PROJECT_NAME=$(basename "$(pwd)")
+PROJECT_NAME=$(basename "$PWD")
 CURRENT_DATE=$(date '+%Y-%m-%d %H:%M:%S')
 
-# Get all files in current directory, excluding the script, cursor.md, cleanup.sh, and report files
-SOURCE_FILES=($(find . -maxdepth 1 -type f ! -name "archive-project.sh" ! -name "cursor.md" ! -name "cleanup.sh" ! -name "ARCHIVE_SCRIPT_DEVELOPMENT_REPORT.md" ! -name "PROJECT_COMPLETION_REPORT.md" -printf "%f\n" 2>/dev/null || find . -maxdepth 1 -type f ! -name "archive-project.sh" ! -name "cursor.md" ! -name "cleanup.sh" ! -name "ARCHIVE_SCRIPT_DEVELOPMENT_REPORT.md" ! -name "PROJECT_COMPLETION_REPORT.md" -exec basename {} \;))
+# Define files to exclude from archive (keep in workspace)
+EXCLUDE_FILES=(
+    "archive-project.ps1"
+    "archive-project.sh"
+    "cleanup.ps1"
+    "cleanup.sh"
+    "cursor.md"
+)
 
-echo "Found ${#SOURCE_FILES[@]} files to archive"
+# Create exclude pattern for find command
+EXCLUDE_PATTERN=""
+for file in "${EXCLUDE_FILES[@]}"; do
+    if [[ -n "$EXCLUDE_PATTERN" ]]; then
+        EXCLUDE_PATTERN="$EXCLUDE_PATTERN -o"
+    fi
+    EXCLUDE_PATTERN="$EXCLUDE_PATTERN -name '$file'"
+done
 
-# Archive each file
-ARCHIVED_FILES=()
-for file in "${SOURCE_FILES[@]}"; do
+# Copy files to archive (excluding specified files)
+echo "Copying project files to archive..."
+FILES_COPIED=0
+TOTAL_FILES=0
+
+# Count total files first
+TOTAL_FILES=$(find . -maxdepth 1 -type f | wc -l)
+
+# Copy files excluding the ones we want to keep
+for file in *; do
     if [[ -f "$file" ]]; then
-        destination="$ARCHIVE_PATH/$file"
-        echo "Archiving: $file -> $destination"
+        # Check if file should be excluded
+        EXCLUDE_FILE=false
+        for exclude in "${EXCLUDE_FILES[@]}"; do
+            if [[ "$file" == "$exclude" ]]; then
+                EXCLUDE_FILE=true
+                break
+            fi
+        done
         
-        cp "$file" "$destination"
-        ARCHIVED_FILES+=("$file")
-        echo "Successfully archived: $file"
+        if [[ "$EXCLUDE_FILE" == false ]]; then
+            cp "$file" "$ARCHIVE_PATH/"
+            echo "Copied: $file"
+            ((FILES_COPIED++))
+        else
+            echo "Excluded: $file"
+        fi
     fi
 done
 
-# Create enhanced archive summary file with project title
+# Create enhanced archive summary
 SUMMARY_PATH="$ARCHIVE_PATH/ARCHIVE_SUMMARY.md"
 cat > "$SUMMARY_PATH" << EOF
-# Project Archive Summary: $PROJECT_TITLE
+# Archive Summary
 
-## Archive Information
-- **Project Title**: $PROJECT_TITLE
-- **Project Name**: $PROJECT_NAME
-- **Archive Date**: $CURRENT_DATE
-- **Archive Location**: $ARCHIVE_PATH
-- **Environment**: $ENVIRONMENT
-- **Computer Name**: $COMPUTER_NAME
-- **WSL Environment**: $IS_WSL
-- **Archive Base Path**: $ARCHIVE_BASE_PATH
-- **Total Files**: ${#ARCHIVED_FILES[@]}
-- **Script Used**: Enhanced archive-project.sh
+**Project**: $PROJECT_TITLE  
+**Project Name**: $PROJECT_NAME  
+**Archive Date**: $CURRENT_DATE  
+**Workstation**: $COMPUTER_NAME  
+**Environment**: $ENVIRONMENT  
+**Archive Location**: $ARCHIVE_PATH  
 
-## Project Overview
-This archive contains the complete project: **$PROJECT_TITLE**
+## Files Archived
+- **Total Files**: $FILES_COPIED
+- **Archive Date**: $(date '+%Y-%m-%d %H:%M:%S')
+- **Source Directory**: $PWD
 
-## Archived Files
-EOF
+## Excluded Files (Kept in Workspace)
+$(printf '- %s\n' "${EXCLUDE_FILES[@]}")
 
-for file in "${ARCHIVED_FILES[@]}"; do
-    echo "- $file" >> "$SUMMARY_PATH"
-done
-
-cat >> "$SUMMARY_PATH" << EOF
-
-## Original Location
-- **Workspace**: $(pwd)
-- **Archive Index**: cursor.md (remains in workspace)
-- **Project Title Source**: cursor.md
-
-## Archive Benefits
-- **Consistent Location**: Always archives to the same base path
-- **Title-Based Organization**: Uses project title from cursor.md
-- **Date Organization**: Organized by year/month/day
-- **Complete Documentation**: Includes all project files and metadata
-
-## Usage
-Review the archived files to understand the project structure and functionality.
-The project title '$PROJECT_TITLE' ensures consistent organization across archives.
+## Archive Contents
+$(ls -la "$ARCHIVE_PATH" | grep -v "^total" | awk '{print "- " $9 " (" $5 " bytes)"}')
 
 ---
-*Archived by Enhanced Bash script: archive-project.sh*
-*Project title extracted from: cursor.md*
+*This archive was created using the enhanced archive script with automatic environment detection.*
 EOF
 
 echo "Created enhanced archive summary: ARCHIVE_SUMMARY.md"
 
-# Create a title-based README for the archive
+# Create project README
 README_PATH="$ARCHIVE_PATH/README.md"
 cat > "$README_PATH" << EOF
 # $PROJECT_TITLE
 
-## Project Description
-This archive contains the complete project: **$PROJECT_TITLE**
+**Archived**: $CURRENT_DATE  
+**Source**: $PWD  
+**Workstation**: $COMPUTER_NAME  
+
+## Project Overview
+This archive contains the complete project files for $PROJECT_TITLE.
 
 ## Archive Contents
-- **Source Files**: ${#ARCHIVED_FILES[@]} total files
-- **Documentation**: Comprehensive project documentation
-- **Archive Summary**: Complete metadata and file listing
+- Source code and project files
+- Technical documentation
+- Archive summary and metadata
 
-## Quick Start
-1. Review ARCHIVE_SUMMARY.md for complete file listing
-2. Check individual files for specific functionality
-3. Refer to cursor.md in the original workspace for context
-
-## Archive Details
-- **Archive Date**: $CURRENT_DATE
-- **Original Project**: $PROJECT_NAME
-- **Archive Location**: $ARCHIVE_PATH
+## Usage
+Refer to the individual files in this archive for specific usage instructions.
 
 ---
-*This README was automatically generated by archive-project.sh*
+*Archived using enhanced archive script with environment detection.*
 EOF
 
 echo "Created project README: README.md"
 
-# Display enhanced archive results
+# Display summary
+echo ""
 echo "=== Enhanced Archive Summary ==="
 echo "Workstation: $COMPUTER_NAME"
 echo "Project Title: $PROJECT_TITLE"
 echo "Project Name: $PROJECT_NAME"
 echo "Archive Location: $ARCHIVE_PATH"
+echo ""
 echo "Archive Base Path: $ARCHIVE_BASE_PATH"
-echo "Files Archived: ${#ARCHIVED_FILES[@]}/${#SOURCE_FILES[@]}"
+echo "Files Archived: $FILES_COPIED/$TOTAL_FILES"
 echo "Archive Summary: ARCHIVE_SUMMARY.md"
 echo "Project README: README.md"
 
-if [[ ${#ARCHIVED_FILES[@]} -eq ${#SOURCE_FILES[@]} ]]; then
+if [[ $FILES_COPIED -gt 0 ]]; then
     echo "All files successfully archived!"
     echo "Project '$PROJECT_TITLE' has been moved to the second brain archive."
-    echo "cursor.md and archive-project.sh remain in the workspace."
+    echo "cursor.md and archive scripts remain in the workspace."
     echo "Archive uses consistent location based on project title from cursor.md"
-else
-    echo "Some files failed to archive. Check the output above."
-fi
+    echo "Enhanced archive process completed!"
+    echo "Project title '$PROJECT_TITLE' ensures consistent organization."
+    
+    # Create related title file
+    TITLE_FILE="title_$(date +%Y%m%d_%H%M%S).md"
+    cat > "$TITLE_FILE" << EOF
+# Project Title Reference
 
-echo "Enhanced archive process completed!"
-echo "Project title '$PROJECT_TITLE' ensures consistent organization."
+**Project**: $PROJECT_TITLE  
+**Date**: $CURRENT_DATE  
+**Archive Location**: $ARCHIVE_PATH  
 
-# Create a related title file for this archive
-TITLE_FILENAME="title_$(date +%Y%m%d_%H%M%S).md"
-cat > "$TITLE_FILENAME" << EOF
-# Archive Title: $PROJECT_TITLE
-
-## Archive Information
-- **Project Title**: $PROJECT_TITLE
-- **Archive Date**: $CURRENT_DATE
-- **Archive Location**: $ARCHIVE_PATH
-- **Environment**: $ENVIRONMENT
-- **Computer Name**: $COMPUTER_NAME
-- **Files Archived**: ${#ARCHIVED_FILES[@]}
-
-## Related Archive
-This title file was created for the archive: **$PROJECT_TITLE**
-Archived on: $CURRENT_DATE
-Location: $ARCHIVE_PATH
-
----
-*Generated by archive-project.sh*
+This file was created during the archive process to maintain project title consistency.
 EOF
-
-echo "Created related title file: $TITLE_FILENAME"
-
-# Execute cleanup script if it exists
-if [[ -f "cleanup.sh" ]]; then
+    echo "Created related title file: $TITLE_FILE"
+    
+    # Execute cleanup script
     echo "Executing cleanup script..."
-    if bash cleanup.sh; then
-        echo "Cleanup script executed successfully!"
+    if [[ -f "cleanup.sh" ]]; then
+        bash cleanup.sh
     else
-        echo "Error executing cleanup script"
+        echo "Cleanup script not found, skipping cleanup."
     fi
+    
+    echo "Enhanced archive process completed!"
+    echo "Project title '$PROJECT_TITLE' ensures consistent organization."
 else
-    echo "No cleanup script found (cleanup.sh)"
+    echo "No files were archived. Check file permissions and paths."
+    exit 1
 fi
-
-echo "Enhanced archive process completed!"
-echo "Project title '$PROJECT_TITLE' ensures consistent organization."
