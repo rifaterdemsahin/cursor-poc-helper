@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Cleanup script to remove files except specified ones
-# Keep: archive-project.sh, cleanup.sh, cursor.md, title.md
+# Keep: archive-project.sh, cleanup.sh, cursor.md
 
 echo "Starting cleanup process..."
 
@@ -13,7 +13,6 @@ files_to_keep=(
     "archive-project.sh"
     "cleanup.sh"
     "cursor.md"
-    "title.md"
 )
 
 # Counter for removed files

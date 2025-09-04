@@ -43,9 +43,9 @@ This archive contains a comprehensive web application designed to trigger N8N wo
 - **Purpose**: Central reference for all project files
 - **Contents**: File descriptions and organization guide
 
-### 5. **title.md** - Title of the poc
-- used athe archieve folder name 
-- create with the inital document creation
+### 5. **Project Title** - Extracted from cursor.md
+- Used as the archive folder name
+- Automatically extracted from the main heading in cursor.md
 
 ### 6. **Archive Scripts** - Automation Tools
 - **Type**: Various Script Types

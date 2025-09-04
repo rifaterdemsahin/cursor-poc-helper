@@ -1,5 +1,5 @@
 # Cleanup script to remove files except specified ones
-# Keep: archive-project.ps1, cleanup.ps1, cursor.md, title.md
+# Keep: archive-project.ps1, cleanup.ps1, cursor.md
 
 Write-Host "Starting cleanup process..." -ForegroundColor Green
 
@@ -10,8 +10,7 @@ $allFiles = Get-ChildItem -File
 $filesToKeep = @(
     "archive-project.ps1",
     "cleanup.ps1", 
-    "cursor.md",
-    "title.md"
+    "cursor.md"
 )
 
 # Counter for removed files
