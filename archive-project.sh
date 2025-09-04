@@ -1,12 +1,22 @@
 #!/bin/bash
 
-# Enhanced Project Archive Script with Title from cursor.md
-# This script reads the project title from cursor.md and uses it for consistent archiving
+# Enhanced Project Archive Script with MANDATORY Folder Name Parameter
+# MCP INTEGRATION: This script REQUIRES MCP to provide the folder name parameter
+# MCP MUST pass the ProjectTitle parameter - NO FALLBACK TO cursor.md OR DIRECTORY NAME
 # Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
-# Usage: ./archive-project.sh [ProjectTitle]
-# If ProjectTitle is not provided, it will be extracted from cursor.md or use directory name
+# Usage: ./archive-project.sh "Your Project Name"
+# MCP COMMAND EXAMPLE: run archive-project.sh "My Project Name"
 
+# MCP INTEGRATION: Validate that PROJECT_TITLE parameter is provided
 PROJECT_TITLE="$1"
+
+# MCP INTEGRATION: Check if project title is provided (MANDATORY)
+if [[ -z "$PROJECT_TITLE" ]]; then
+    echo "ERROR: MCP MUST provide the project folder name as the first parameter!"
+    echo "Usage: $0 \"Your Project Name\""
+    echo "MCP COMMAND EXAMPLE: run archive-project.sh \"My Project Name\""
+    exit 1
+fi
 
 echo "=== Enhanced Project Archive Script ==="
 echo "Detecting environment and setting archive location..."
@@ -73,28 +83,9 @@ else
     echo "⚠ Warning: Environment not fully recognized"
 fi
 
-# Determine project title from parameter, cursor.md, or directory name
-if [[ -z "$PROJECT_TITLE" ]]; then
-    echo "Reading project title from cursor.md..."
-    
-    # Read cursor.md to extract project title
-    if [[ ! -f "cursor.md" ]]; then
-        echo "ERROR: cursor.md not found! Cannot proceed without project title."
-        exit 1
-    fi
-
-    # Extract title from cursor.md (look for # Project Title)
-    PROJECT_TITLE=$(grep -m 1 "^# " cursor.md | sed 's/^# *//' | tr -d '\r')
-    if [[ -z "$PROJECT_TITLE" ]]; then
-        # Fallback: use directory name
-        PROJECT_TITLE=$(basename "$PWD")
-        echo "No title found in cursor.md, using directory name: $PROJECT_TITLE"
-    else
-        echo "Found project title: $PROJECT_TITLE"
-    fi
-else
-    echo "Using provided project title: $PROJECT_TITLE"
-fi
+# MCP INTEGRATION: Project title is MANDATORY and MUST be provided by MCP
+# NO FALLBACK LOGIC - MCP is responsible for providing the correct folder name
+echo "Using MCP-provided project title: $PROJECT_TITLE"
 
 # Create consistent archive location using project title
 ARCHIVE_PATH="$ARCHIVE_BASE_PATH/$PROJECT_TITLE"
@@ -182,7 +173,7 @@ $(printf '- %s\n' "${EXCLUDE_FILES[@]}")
 $(ls -la "$ARCHIVE_PATH" | grep -v "^total" | awk '{print "- " $9 " (" $5 " bytes)"}')
 
 ---
-*This archive was created using the enhanced archive script with automatic environment detection.*
+*This archive was created using the enhanced archive script with MCP-provided project title.*
 EOF
 
 echo "Created enhanced archive summary: ARCHIVE_SUMMARY.md"
@@ -208,7 +199,7 @@ This archive contains the complete project files for $PROJECT_TITLE.
 Refer to the individual files in this archive for specific usage instructions.
 
 ---
-*Archived using enhanced archive script with environment detection.*
+*Archived using enhanced archive script with MCP-provided project title.*
 EOF
 
 echo "Created project README: README.md"
@@ -230,9 +221,9 @@ if [[ $FILES_COPIED -gt 0 ]]; then
     echo "All files successfully archived!"
     echo "Project '$PROJECT_TITLE' has been moved to the second brain archive."
     echo "cursor.md and archive scripts remain in the workspace."
-    echo "Archive uses consistent location based on project title from cursor.md"
+    echo "Archive uses consistent location based on MCP-provided project title"
     echo "Enhanced archive process completed!"
-    echo "Project title '$PROJECT_TITLE' ensures consistent organization."
+    echo "MCP-provided project title '$PROJECT_TITLE' ensures consistent organization."
     
     # Create related title file
     TITLE_FILE="title_$(date +%Y%m%d_%H%M%S).md"
@@ -256,7 +247,7 @@ EOF
     fi
     
     echo "Enhanced archive process completed!"
-    echo "Project title '$PROJECT_TITLE' ensures consistent organization."
+    echo "MCP-provided project title '$PROJECT_TITLE' ensures consistent organization."
 else
     echo "No files were archived. Check file permissions and paths."
     exit 1

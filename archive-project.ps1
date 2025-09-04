@@ -1,11 +1,13 @@
-# Enhanced Project Archive Script with Title from cursor.md
-# This script reads the project title from cursor.md and uses it for consistent archiving
+# Enhanced Project Archive Script with MANDATORY Folder Name Parameter
+# MCP INTEGRATION: This script REQUIRES MCP to provide the folder name parameter
+# MCP MUST pass the ProjectTitle parameter - NO FALLBACK TO cursor.md OR DIRECTORY NAME
 # Automatically detects environment (mac, workstation, xps) and uses appropriate archive location
-# Usage: .\archive-project.ps1 [ProjectTitle]
-# If ProjectTitle is not provided, it will be extracted from cursor.md or use directory name
+# Usage: .\archive-project.ps1 -ProjectTitle "Your Project Name"
+# MCP COMMAND EXAMPLE: run archive-project.ps1 --ProjectTitle "My Project Name"
 
 param(
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true, HelpMessage="MCP MUST provide the project folder name - this parameter is MANDATORY")]
+    [ValidateNotNullOrEmpty()]
     [string]$ProjectTitle
 )
 
@@ -69,30 +71,9 @@ if ($Environment -eq "xps" -and $IsWSL) {
     Write-Host "⚠ Warning: Environment not fully recognized" -ForegroundColor Yellow
 }
 
-# Determine project title from parameter, cursor.md, or directory name
-if (-not $ProjectTitle) {
-    Write-Host "Reading project title from cursor.md..." -ForegroundColor Yellow
-    
-    # Read cursor.md to extract project title
-    $CursorContent = Get-Content -Path "cursor.md" -Raw -ErrorAction SilentlyContinue
-    if (-not $CursorContent) {
-        Write-Host "ERROR: cursor.md not found! Cannot proceed without project title." -ForegroundColor Red
-        exit 1
-    }
-
-    # Extract title from cursor.md (look for # Project Archive Index or similar)
-    $TitleMatch = [regex]::Match($CursorContent, '#\s*(.+?)(?:\r?\n|$)')
-    if ($TitleMatch.Success) {
-        $ProjectTitle = $TitleMatch.Groups[1].Value.Trim()
-        Write-Host "Found project title: $ProjectTitle" -ForegroundColor Green
-    } else {
-        # Fallback: use directory name
-        $ProjectTitle = Split-Path (Get-Location) -Leaf
-        Write-Host "No title found in cursor.md, using directory name: $ProjectTitle" -ForegroundColor Yellow
-    }
-} else {
-    Write-Host "Using provided project title: $ProjectTitle" -ForegroundColor Green
-}
+# MCP INTEGRATION: Project title is MANDATORY and MUST be provided by MCP
+# NO FALLBACK LOGIC - MCP is responsible for providing the correct folder name
+Write-Host "Using MCP-provided project title: $ProjectTitle" -ForegroundColor Green
 
 # Create consistent archive location using project title
 $ArchivePath = Join-Path $ArchiveBasePath $ProjectTitle
@@ -159,11 +140,11 @@ $SummaryLines += @(
     "## Original Location",
     "- **Workspace**: $(Get-Location)",
     "- **Archive Index**: cursor.md (remains in workspace)",
-    "- **Project Title Source**: cursor.md",
+    "- **Project Title Source**: MCP Parameter (Mandatory)",
     "",
     "## Archive Benefits",
     "- **Consistent Location**: Always archives to the same base path",
-    "- **Title-Based Organization**: Uses project title from cursor.md",
+    "- **Title-Based Organization**: Uses project title from MCP parameter",
     "- **Date Organization**: Organized by year/month/day",
     "- **Complete Documentation**: Includes all project files and metadata",
     "",
@@ -173,7 +154,7 @@ $SummaryLines += @(
     "",
     "---",
     "*Archived by Enhanced PowerShell script: archive-project.ps1*",
-    "*Project title extracted from: cursor.md*"
+    "*Project title provided by: MCP Parameter*"
 )
 
 Set-Content -Path $SummaryPath -Value $SummaryLines -Encoding UTF8
@@ -224,13 +205,13 @@ if ($ArchivedFiles.Count -eq $SourceFiles.Count) {
     Write-Host "All files successfully archived!" -ForegroundColor Green
     Write-Host "Project '$ProjectTitle' has been moved to the second brain archive." -ForegroundColor Green
     Write-Host "cursor.md and archive-project.ps1 remain in the workspace." -ForegroundColor Green
-    Write-Host "Archive uses consistent location based on project title from cursor.md" -ForegroundColor Green
+    Write-Host "Archive uses consistent location based on MCP-provided project title" -ForegroundColor Green
 } else {
     Write-Host "Some files failed to archive. Check the output above." -ForegroundColor Yellow
 }
 
 Write-Host "Enhanced archive process completed!" -ForegroundColor Green
-Write-Host "Project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
+Write-Host "MCP-provided project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
 
 # Create a related title file for this archive
 $TitleFileName = "title_$(Get-Date -Format 'yyyyMMdd_HHmmss').md"
@@ -271,4 +252,4 @@ if (Test-Path "cleanup.ps1") {
 }
 
 Write-Host "Enhanced archive process completed!" -ForegroundColor Green
-Write-Host "Project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
+Write-Host "MCP-provided project title '$ProjectTitle' ensures consistent organization." -ForegroundColor Green
