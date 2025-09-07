@@ -51,8 +51,8 @@ elif [[ "$COMPUTER_NAME" == *"3995wrx"* || "$COMPUTER_NAME" == *"3995WRX"* ]]; t
 elif [[ "$OS" == "Darwin" ]]; then
     # Mac environment
     ENVIRONMENT="mac"
-    ARCHIVE_BASE_PATH="$HOME/projects/secondbrain/$(date +%Y/%m/%d)"
-    echo "Detected Mac environment - using ~/projects/secondbrain"
+    ARCHIVE_BASE_PATH="$HOME/projects/secondbrain/secondbrain/4_Archieve/$(date +%Y/%m/%d)"
+    echo "Detected Mac environment - using ~/projects/secondbrain/secondbrain/4_Archieve"
 elif [[ "$COMPUTER_NAME" == *"XPS"* || "$COMPUTER_NAME" == *"xps"* || "$COMPUTER_NAME" == *"LaptopErdem"* || "$COMPUTER_NAME" == *"laptoperdem"* ]]; then
     # Dell XPS native Linux
     ENVIRONMENT="xps"
@@ -78,7 +78,7 @@ elif [[ "$ENVIRONMENT" == "workstation" ]]; then
     echo "✓ Destination: /mnt/f/secondbrain_v4/secondbrain/secondbrain/4_Archieve"
 elif [[ "$ENVIRONMENT" == "mac" ]]; then
     echo "✓ Confirmed: Running on Mac environment"
-    echo "✓ Destination: ~/projects/secondbrain"
+    echo "✓ Destination: ~/projects/secondbrain/secondbrain/4_Archieve"
 else
     echo "⚠ Warning: Environment not fully recognized"
 fi
